@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Recognition with Text-to-Speech</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech Recognition and Text-to-Speech Demo</h1>
+    <button onclick="startRecognition()">Click to Speak</button>
+
+    <div id="output"></div>
+
+    <script>
+        // Function for speech recognition
+        function startRecognition() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US'; // Set language
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('output').innerHTML = 'You said: ' + transcript;
+                speak(transcript); // Call speak function to read out the recognized text
+            };
+
+            recognition.onerror = function(event) {
+                document.getElementById('output').innerHTML = 'Error occurred in recognition: ' + event.error;
+            };
+        }
+
+        // Function for text-to-speech
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; // Set language for speech
+            synth.speak(utterance);
+        }
+    </script>
+</body>
+</html>
